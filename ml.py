@@ -20,13 +20,13 @@ pygame.mixer.init()
 reader = easyocr.Reader(['en', 'hi'])
 
 # Load the YOLO model
-net = cv2.dnn.readNet('ojt//yolov3.weights', 'ojt//yolov3.cfg')
+net = cv2.dnn.readNet('https://www.kaggle.com/datasets/valentynsichkar/yolo-coco-data?select=yolov3.weights', 'https://www.kaggle.com/datasets/valentynsichkar/yolo-coco-data?select=yolov3.cfg')
 layer_names = net.getLayerNames()
 output_layers_indices = net.getUnconnectedOutLayers()
 output_layers = [layer_names[i - 1] for i in output_layers_indices.flatten()]
 
 # Define the classes for YOLO
-with open('ojt//coco.names', 'r') as f:
+with open('https://www.kaggle.com/datasets/valentynsichkar/yolo-coco-data?select=coco.names', 'r') as f:
     classes = f.read().strip().split('\n')
 
 # Global variables for controlling the app
