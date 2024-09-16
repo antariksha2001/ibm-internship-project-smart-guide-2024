@@ -12,12 +12,13 @@ import speech_recognition as sr
 import threading
 from tensorflow.keras.models import load_model
 import pyttsx3
-import easyocr
-from datetime import datetime
+import easyocr  
 
-
+# Initialize pygame mixer for playing audio
 pygame.mixer.init()
-reader = easyocr.Reader(['en', 'hi'])
+
+# Initialize the OCR reader
+reader = easyocr.Reader(['en', 'hi'])  # You can add more languages
 
 # Load the YOLO model
 net = cv2.dnn.readNet('https://www.kaggle.com/datasets/valentynsichkar/yolo-coco-data?select=yolov3.weights', 'https://www.kaggle.com/datasets/valentynsichkar/yolo-coco-data?select=yolov3.cfg')
@@ -31,14 +32,13 @@ with open('https://www.kaggle.com/datasets/valentynsichkar/yolo-coco-data?select
 
 # Global variables for controlling the app
 stop_signal = False
-start_signal = False
+command = ""
 engine = pyttsx3.init()
 
-# Function to calculate distance (in meters)
+# Function to calculate distance (dummy function, modify according to camera specifics)
 def calculate_distance(width, known_width=30, focal_length=700):
-    distance_cm = (known_width * focal_length) / width
-    distance_m = distance_cm / 100  
-    return distance_m
+    distance = (known_width * focal_length) / width
+    return distance
 
 # Function to detect objects
 def detect_objects(frame):
@@ -76,7 +76,7 @@ def detect_objects(frame):
         for i in indexes:
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]])
-            distance = calculate_distance(w)
+            distance = calculate_distance(w)  # Calculate distance based on the width of the object
             results.append({
                 "label": label,
                 "confidence": confidences[i],
@@ -88,35 +88,47 @@ def detect_objects(frame):
 
 # Function to detect text using OCR
 def detect_text(frame, language):
+    # Convert the frame to grayscale (optional)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Perform OCR on the image
     result = reader.readtext(gray)
 
     if len(result) > 0:
+        # Loop through detected text
         for (bbox, text, prob) in result:
-            if prob > 0.5:
+            if prob > 0.5:  # Confidence threshold
+                # Draw bounding box around text
                 cv2.rectangle(frame, (int(bbox[0][0]), int(bbox[0][1])), (int(bbox[2][0]), int(bbox[2][1])), (0, 255, 0), 2)
                 cv2.putText(frame, text, (int(bbox[0][0]), int(bbox[0][1]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+                # Speak the detected text
                 speak(text, lang=language[1])
 
     return frame
 
-# Function to process the frame
+# Function to handle frame processing
 def process_frame(frame, language):
+    # Object detection
     detections = detect_objects(frame)
-
+    
     for detection in detections:
         x, y, w, h = detection["box"]
         label = detection["label"]
         distance = detection["distance"]
         color = (0, 255, 0)
         cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-        cv2.putText(frame, f'{label} ({distance:.2f} meters)', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
-        speak(f'{label} detected at {distance:.2f} meters', lang=language[1])
+        cv2.putText(frame, f'{label} ({distance / 100:.2f} meters)', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
 
+        # Speak object detection result and distance in meters
+        speak(f'{label} detected at {distance / 100:.2f} meters', lang=language[1])
+
+    # OCR detection
     frame = detect_text(frame, language)
+
     return frame
 
-# Function to speak text
+# Function to speak text using gTTS and pygame
 def speak(text, lang='en'):
     tts = gTTS(text=text, lang=lang)
     audio_data = BytesIO()
@@ -124,56 +136,17 @@ def speak(text, lang='en'):
     audio_data.seek(0)
     pygame.mixer.music.load(audio_data, "mp3")
     pygame.mixer.music.play()
+
     while pygame.mixer.music.get_busy():
         time.sleep(0.1)
 
-# Voice recognition function with date and time validation
-def recognize_voice():
-    global start_signal, stop_signal
-    recognizer = sr.Recognizer()
-    mic = sr.Microphone()
-
-    with mic as source:
-        recognizer.adjust_for_ambient_noise(source)
-
-    while True:
-        with mic as source:
-            audio = recognizer.listen(source)
-
-     
-
-    try:
-        command = recognizer.recognize_google(audio).lower()
-        current_time = datetime.now().strftime("%H:%M:%S")
-        current_date = datetime.now().strftime("%Y-%m-%d")
-
-        if "start" in command:
-            start_signal = True
-            stop_signal = False
-            speak(f"Starting the Smart Guide at {current_time}", 'en')
-
-        elif "stop" in command:
-            stop_signal = True
-            start_signal = False
-            speak(f"Stopping the Smart Guide at {current_time}", 'en')
-
-        # New commands for time and date
-        elif "time" in command or "tell me the time" in command:
-            speak(f"The current time is {current_time}", 'en')
-
-        elif "date" in command or "tell me the date" in command:
-            speak(f"Today's date is {current_date}", 'en')
-
-    except sr.UnknownValueError:
-        pass
-
-
 # Streamlit design
 def main():
-    global stop_signal, start_signal
+    global stop_signal, command
 
-    st.set_page_config(page_title="Smart Guide", layout="wide")
+    st.set_page_config(page_title="Smart Guide with Text Detection", layout="wide")
 
+    # Add a background image
     def get_base64_image(image_path):
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode()
@@ -191,10 +164,10 @@ def main():
             font-family: 'Arial', sans-serif;
         }}
         .card-box {{
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgb(255 255 255 / 20%);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 0px 15px rgb(0 0 0 / 50%)
             max-width: 700px;
             margin: 50px auto;
             text-align: center;
@@ -212,12 +185,12 @@ def main():
             background-color: #0056b3;
         }}
         h1 {{
-            color: #333;
+            color: #fff;
             font-size: 2.5rem;
             margin-bottom: 20px;
         }}
         h2 {{
-            color: #555;
+            color: #fff;
             font-size: 2rem;
             margin-bottom: 20px;
         }}
@@ -225,13 +198,13 @@ def main():
         """,
         unsafe_allow_html=True
     )
-
-    st.title("Smart Guide")
+    st.image("pic/Smart.png", width=150) 
+    #st.title("Smart Guide")
 
     st.markdown(
         """
         <div class="card-box">
-            <h2>Experience Object and Text Detection in Real-Time</h2>
+            <h2>Real time object and text detection</h2>
            
         </div>
         """,
@@ -258,57 +231,60 @@ def main():
     video_source = st.selectbox("Select Video Source", ["Webcam", "Upload Video", "Upload Image"])
 
     if video_source == "Webcam":
-        st.write("Use voice command 'start' to begin the video stream and 'stop' to end it.")
+        video_stream = st.checkbox("Start Video Stream")
+        if video_stream:
+            run_webcam(language)
 
-    voice_thread = threading.Thread(target=recognize_voice)
-    voice_thread.daemon = True
-    voice_thread.start()
-
-    video_frame = st.empty()
-
-    if video_source == "Webcam":
-        cap = cv2.VideoCapture(0)
-
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret or stop_signal:
-                break
-
-            if start_signal:
-                frame = process_frame(frame, language)
-
-            video_frame.image(frame, channels="BGR")
-
-        cap.release()
-
-    if video_source == "Upload Video":
-        uploaded_video = st.file_uploader("Choose a video file", type=["mp4", "avi", "mkv"])
+    elif video_source == "Upload Video":
+        uploaded_video = st.file_uploader("Choose a video...", type=["mp4", "avi", "mkv", "mov"])
         if uploaded_video:
-            temp_file = "temp_video.mp4"
-            with open(temp_file, "wb") as f:
-                f.write(uploaded_video.getbuffer())
+            process_uploaded_video(uploaded_video, language)
 
-            cap = cv2.VideoCapture(temp_file)
-
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if not ret or stop_signal:
-                    break
-
-                if start_signal:
-                    frame = process_frame(frame, language)
-
-                video_frame.image(frame, channels="BGR")
-
-            cap.release()
-
-    if video_source == "Upload Image":
-        uploaded_image = st.file_uploader("Choose an image file", type=["jpg", "png", "jpeg"])
+    elif video_source == "Upload Image":
+        uploaded_image = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
         if uploaded_image:
-            img_array = np.asarray(bytearray(uploaded_image.read()), dtype=np.uint8)
-            frame = cv2.imdecode(img_array, 1)
-            frame = process_frame(frame, language)
-            video_frame.image(frame, channels="BGR")
+            process_uploaded_image(uploaded_image, language)
 
-if __name__ == "__main__":
+# Function to run the webcam
+def run_webcam(language):
+    cap = cv2.VideoCapture(0)
+    stframe = st.empty()
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        processed_frame = process_frame(frame, language)
+        stframe.image(processed_frame, channels="BGR")
+
+    cap.release()
+
+# Function to process uploaded video
+def process_uploaded_video(video, language):
+    video_path = video.name
+    with open(video_path, "wb") as f:
+        f.write(video.getbuffer())
+    cap = cv2.VideoCapture(video_path)
+    stframe = st.empty()
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        processed_frame = process_frame(frame, language)
+        stframe.image(processed_frame, channels="BGR")
+
+    cap.release()
+
+# Function to process uploaded image
+def process_uploaded_image(image, language):
+    file_bytes = np.asarray(bytearray(image.read()), dtype=np.uint8)
+    frame = cv2.imdecode(file_bytes, 1)
+
+    processed_frame = process_frame(frame, language)
+    st.image(processed_frame, channels="BGR")
+
+if __name__ == '__main__':
     main()
