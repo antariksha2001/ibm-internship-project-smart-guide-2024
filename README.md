@@ -9,7 +9,7 @@
          
 The <strong>Smart Guide for a Blind Person</strong> is an AI-driven assistive system designed to help visually impaired individuals with real-time navigation and object recognition. The project integrates state-of-the-art technologies like YOLO (You Only Look Once) for object detection and EasyOCR for text recognition. The solution provides real-time audio feedback in multiple languages, allowing users to safely navigate their surroundings. This project aims to address the limitations of traditional navigation aids like white canes by offering an intelligent, real-time guiding system.
 
-            </p>
+  </p>
         </div>
 
    <div class="section">
