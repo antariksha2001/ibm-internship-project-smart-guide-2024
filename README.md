@@ -1,13 +1,83 @@
- <h1>Smart Guide for a Blind Person</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Smart Guide for a Blind Person</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .section p {
+            line-height: 1.6;
+        }
+        .section pre {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .section ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        .section ul li {
+            margin: 5px 0;
+        }
+        .code-block {
+            background-color: #eee;
+            border-left: 5px solid #0056b3;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #0056b3;
+            color: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Smart Guide for a Blind Person</h1>
         
-       
-   <h2>Project Overview</h2>
+  <div class="section">
+            <h2>Project Overview</h2>
             <p>
                 <strong>Smart Guide for a Blind Person</strong> is an assistive technology designed to enhance the independence and safety of visually impaired individuals. The system integrates technologies such as <strong>object detection, OCR, currency recognition, GPS navigation</strong>, and <strong>speech synthesis</strong>, providing real-time feedback through voice guidance. It uses <em>YOLOv3-tiny, OpenCV, EasyOCR, Tesseract</em>, and <em>PyTorch</em>, with a web and mobile app interface.
             </p>
         </div>
 
-       
+   <div class="section">
             <h2>Key Features</h2>
             <ul>
                 <li><strong>Object Detection</strong>: Detects objects in real time using the YOLO model.</li>
@@ -22,7 +92,7 @@
             </ul>
         </div>
 
-        <div class="section">
+   <div class="section">
             <h2>Technologies Used</h2>
             <ul>
                 <li><strong>Backend:</strong> Python, Flask</li>
@@ -35,7 +105,7 @@
             </ul>
         </div>
 
-        <div class="section">
+   <div class="section">
             <h2>Installation</h2>
             <p>To run this project locally, follow these steps:</p>
             <pre>
@@ -53,7 +123,7 @@
             </pre>
         </div>
 
-        <div class="section">
+  <div class="section">
             <h2>Usage</h2>
             <p>Follow these steps to use the key features:</p>
             <ul>
@@ -82,7 +152,7 @@ smart-guide-for-blind-person/
             </pre>
         </div>
 
-        <div class="section">
+  <div class="section">
             <h2>Hardware Requirements</h2>
             <ul>
                 <li>Raspberry Pi (optional, for portability)</li>
@@ -92,7 +162,7 @@ smart-guide-for-blind-person/
             </ul>
         </div>
 
-        <div class="section">
+  <div class="section">
             <h2>Challenges and Limitations</h2>
             <ul>
                 <li><strong>Voice Command Recognition</strong>: May face challenges in noisy environments.</li>
@@ -101,7 +171,7 @@ smart-guide-for-blind-person/
             </ul>
         </div>
 
-        <div class="section">
+   <div class="section">
             <h2>Future Enhancements</h2>
             <ul>
                 <li>Integrating more languages for OCR.</li>
@@ -111,7 +181,9 @@ smart-guide-for-blind-person/
             </ul>
         </div>
 
-        <footer>
+  <footer>
             <p>Smart Guide for a Blind Person &copy; 2024 | Developed by Your Name</p>
         </footer>
-
+    </div>
+</body>
+</html>
