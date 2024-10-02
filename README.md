@@ -51,17 +51,27 @@ EasyOCR: An open-source optical character recognition library that extracts text
 <ul><li><b>gTTS:</b> Google Text-to-Speech for converting text into audio.</li>
 <li><b>pyttsx3:</b> An offline text-to-speech library for Python.</li></ul>
 <strong>Framework</strong>
-Streamlit: A web application framework for machine learning and data science projects, used to build the user interface.
-Programming Language
-Python 3.11: The core language used for developing the project.
-Additional Libraries
-OpenCV: For processing images from the webcam.
-Pygame: For playing back audio feedback.
-Tesseract-OCR: An alternative to EasyOCR for text recognition, supporting additional languages.
-Hardware and Software Requirements
-Hardware
-Webcam: To capture video feed for object and text detection.
-CPU/GPU: A computer with a good CPU/GPU is recommended for real-time processing.
-Software
-Python 3.11
-VS Code: Integrated development environment for Python.
+<ul><li><b>Streamlit:</b> A web application framework for machine learning and data science projects, used to build the user interface.</li></ul>
+
+
+<strong>Programming Language</strong>
+<ul><li><b>Python 3.11:</b> The core language used for developing the project.</li></ul>
+
+
+<strong>Additional Libraries</strong>
+<ul><li><b>
+OpenCV:</b> For processing images from the webcam.</li>
+<li>Pygame: For playing back audio feedback.</li>
+<li>EasyOCR: An alternative to EasyOCR for text recognition, supporting additional languages.</li>
+</ul>
+
+<strong>Hardware and Software Requirements</strong>
+<b>Hardware</b>
+<ul>
+<li>Webcam: To capture video feed for object and text detection.</li>
+<li>CPU/GPU: A computer with a good CPU/GPU is recommended for real-time processing.</li>
+</ul>
+
+<strong>Software</strong>
+<li>Python 3.11</li>
+<li>VS Code: Integrated development environment for Python.</li>
