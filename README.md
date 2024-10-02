@@ -1,8 +1,7 @@
-
-        <h1>Smart Guide for a Blind Person</h1>
+ <h1>Smart Guide for a Blind Person</h1>
         
        
-            <h2>Project Overview</h2>
+   <h2>Project Overview</h2>
             <p>
                 <strong>Smart Guide for a Blind Person</strong> is an assistive technology designed to enhance the independence and safety of visually impaired individuals. The system integrates technologies such as <strong>object detection, OCR, currency recognition, GPS navigation</strong>, and <strong>speech synthesis</strong>, providing real-time feedback through voice guidance. It uses <em>YOLOv3-tiny, OpenCV, EasyOCR, Tesseract</em>, and <em>PyTorch</em>, with a web and mobile app interface.
             </p>
